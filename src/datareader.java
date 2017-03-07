@@ -43,8 +43,26 @@ public class datareader extends HttpServlet {
 		out.print("				cursor: pointer;");
 		out.print("			}");
 		out.print("			.submit:hover {");
-		out.print("				color: white;");
+		out.print("				background-color: #71FF71;");
 		out.print("			}");
+		
+		out.print(" 		.back {");
+		out.print("				background-color: white;");
+		out.print("				border: 2px solid #AF0000;");
+		out.print("				color: black;");
+		out.print("				padding: 8px 8px;");
+		out.print("				text-align: center;");
+		out.print("				text-decoration: none;");
+		out.print("				display: inline-block;");
+		out.print("				font-size: 16px;");
+		out.print("				margin: 4px 2px;");
+		out.print("				transition-duration: 0.4s;");
+		out.print("				cursor: pointer;");
+		out.print("			}");
+		out.print("			.back:hover {");
+		out.print("				background-color: pink;");
+		out.print("			}");
+		
 		out.print("			.ansForm {");
 		out.print("				border: 2px solid black;");
 		out.print("				margin: 20px 500px 20px 500px;");
@@ -62,7 +80,7 @@ public class datareader extends HttpServlet {
 		out.print("                 	<th align=\"left\">Question</th>");
 		out.print("						<th align=\"left\">Row</th>");
 		out.print("						<th align=\"left\">Column</th>");
-		out.print("						<th>Score</th>");
+		out.print("						<th align=\"left\">Score</th>");
 		out.print("					</tr>");
 		
 		//Read the text file, scanning for questions.
@@ -97,6 +115,7 @@ public class datareader extends HttpServlet {
 				}
 			}
 		}
+		//catch invalid reading of file
 		catch (Exception ex)
 		{
 			out.print("					<tr>");
@@ -106,12 +125,15 @@ public class datareader extends HttpServlet {
 			out.print("						<td>3</td>");
 			out.print("					</tr>");
 		}
+		
 		//now qnum will have number of questions, which also is number of unique IDs for row, column, and score put into the form
 		
 		
 		out.print("				</table>");
-		//need submit button, also need to submit qnum in POST
-		out.print("<input type=\"submit\" class=\"submit\" value=\"Create the game!\">");
+		out.print("				<input type=\"submit\" class=\"submit\" value=\"Create the game!\">");
+		//back button to add more questions
+		out.print("				<br>");
+		out.print("				<input type=\"button\" class=\"back\" onclick=\"location.href=\'http://plato.cs.virginia.edu/~knt3tb/hw2/main.php\'\"value=\"Add more questions\">");
 		out.print("			</form>");
 		out.print("		</center>");
 		out.print("	</body>");

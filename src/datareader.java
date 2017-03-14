@@ -18,7 +18,6 @@ public class datareader extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		InputStream is = new URL("http://plato.cs.virginia.edu/~knt3tb/hw2/data/data.txt").openStream();
@@ -97,6 +96,7 @@ public class datareader extends HttpServlet {
 					line = data.readLine();
 					if (line != null)
 					{
+						String qid="q"+qnum;
 						String rowid="row"+qnum;
 						String colid="col"+qnum;
 						String scoreid="score"+qnum;
@@ -106,6 +106,8 @@ public class datareader extends HttpServlet {
 						out.print("						<td><input type=\"text\" id="+colid+" name="+colid+" value=\"\" placeholder=\"1\" style=\"width: 60px\"/></td>");
 						out.print("						<td><input type=\"text\" id="+scoreid+" name="+scoreid+" value=\"\" placeholder=\"100\" style=\"width: 60px\"/></td>");
 						out.print("					</tr>");
+						//passing the question itself as a separate value in the form
+						out.print("					<input name="+qid+" value="+line+" type='hidden'>");
 						qnum++;
 					}
 				}
@@ -133,6 +135,7 @@ public class datareader extends HttpServlet {
 		out.print("				<input type=\"submit\" class=\"submit\" value=\"Create the game!\">");
 		//back button to add more questions
 		out.print("				<br>");
+		out.print("				<input name=\"number\" value="+qnum+" type='hidden'>");
 		out.print("				<input type=\"button\" class=\"back\" onclick=\"location.href=\'http://plato.cs.virginia.edu/~knt3tb/hw2/main.php\'\"value=\"Add more questions\">");
 		out.print("			</form>");
 		out.print("		</center>");
@@ -144,7 +147,100 @@ public class datareader extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	{
+		int num = Integer.parseInt(request.getParameter("number"));
+		int numrows=0;
+		int numcols=0;
+
+		
+		
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		out.print("<html>");
+		out.print("	<head>");
+		out.print("		<meta charset=\"utf-8>\"");
+		out.print("		<title>Jeopardy Game Maker</title>");
+		out.print("	</head>");
+		out.print("	<body>");
+		
+		//NEED TO WRITE TO A LOCAL FILE HERE
+		//include question on one line, row on next, col on next, score on last, then blank line
+		//Code below may display questions without having to read file, reading file will be for later HW assignments
+		//questions passed in as "q0", "q1", etc
+		//row values for questions passed in with ids as "row0", "row1" etc
+		//same for column and score values as "col0", "score0"
+		for(int i=0;i<num;i++)
+		{
+			try {
+				int currentrow= Integer.parseInt(request.getParameter("row"+i));
+				int currentcol= Integer.parseInt(request.getParameter("col"+i));
+				if (currentrow>numrows)
+				{
+					numrows=currentrow-1;
+				}
+				if(currentcol>numcols)
+				{
+					numcols=currentcol-1;
+				}
+				//write to some file here... here is my pseudocode. You should overwrite the file each time you submit so that there is only one game at a time.
+				//file.append(getParameter(q+i))
+				//file.append(getParameter(row+i))
+				//file.append(getParameter(col+i))
+				//file.append(getParameter(score+i))
+				//file.append(\n)
+			} 
+			catch (Exception e) 
+			{
+				
+			}
+		}
+		
+		/* Checking that arguments read properly
+		out.print(" 	<p>"+num+"</p>");
+		out.print(" 	<p>"+numcols+"</p>");
+		out.print(" 	<p>"+numrows+"</p>");
+		*/
+		out.print("		<center>");
+		
+		out.print("			<table>");
+		//create nested for loops, with try catch to prevent errors if no question at r, c
+		int r = 1;
+		int c = 1;
+		
+		//ERROR PROPBABLY IN THESE LOOPS. also, format the table so it has a border
+		for(;r<=numrows;r++);
+		{
+			out.print("					<tr>");
+			for(;c<=numcols;c++)
+			{
+				for(int i=0;i<num;i++)
+				{
+					try{
+						int currentrow= Integer.parseInt(request.getParameter("row"+i));
+						int currentcol= Integer.parseInt(request.getParameter("col"+i));
+						if(currentrow == r && currentcol == c)
+						{
+							out.print("					<td>"+request.getParameter("score"+i)+"</td>");
+						}
+					}
+					catch (Exception e)
+					{
+						out.print("<td>Error at printing stage at row "+(r+1)+" and column"+(c+1)+"</p>");
+						out.print("<p>"+e+"</p>");
+					}
+				}
+			}
+			out.print("					</tr>");
+		}
+		out.print("			</table>");
+		out.print("		</center>");
+		out.print("	</body>");
+		out.print("</html>");
+		
+		
+		//need to write to file based on input data
+		
 	}
 
 }

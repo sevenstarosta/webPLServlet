@@ -32,6 +32,16 @@ public class datareader extends HttpServlet {
 		out.print("		<meta charset=\"utf-8>\"");
 		out.print("		<title></title>");
 		out.print("		<style>");
+		out.print("			ol {");
+		out.print("				list-style-position: inside;");
+		out.print("				font-size: 105%;");
+		out.print("				color: red;");
+		out.print("			}");
+
+		out.print("			li{");
+		out.print("				margin-top: 10px;");
+		out.print("			}");
+
 		out.print(" 		.submit {");
 		out.print("				background-color: white;");
 		out.print("				border: 2px solid green;");
@@ -46,6 +56,7 @@ public class datareader extends HttpServlet {
 		out.print("				transition-duration: 0.4s;");
 		out.print("				cursor: pointer;");
 		out.print("			}");
+
 		out.print("			.submit:hover {");
 		out.print("				background-color: green;");
 		out.print("				color: white;");
@@ -65,6 +76,7 @@ public class datareader extends HttpServlet {
 		out.print("				transition-duration: 0.4s;");
 		out.print("				cursor: pointer;");
 		out.print("			}");
+
 		out.print("			.back:hover {");
 		out.print("				background-color: red;");
 		out.print("				color: white;");
@@ -82,17 +94,30 @@ public class datareader extends HttpServlet {
 		out.print("		</style>");
 		out.print("	</head>");
 		out.print("	<body>");
+		out.print("		<center>");
 		out.print("		<h1 align=\"center\">Jeopardy Game Creator</h1>");
 		out.print("     <h2 align=\"center\">By Khanh Tran (knt3tb) and Seven Starosta (sbs3bx)");
+		out.print(
+				"		<h3> Use this form to assign a row position, column position, and score to your questions <br>and proceed to creating a jeopardy grid for your game! </h3>");
+		out.print("		<h3> <font color=\"red\"> Instuctions: </font></h3>");
+		out.print("		<ol>");
+		out.print(
+				"			<li> Notice your questions and related answer(s) in the left column. <br> Note: Correct multiple choice answer is in <b>bold</b> </li>");
+		out.print("			<li> Enter <b>numerical</b> values into the form under row, column, and score. </li>");
+		out.print(
+				"			<li> Click on Add More Questions to create additional questions for your game <br>or Create the Game! to see your grid. </li>");
+		out.print("</ol>");
+		out.print("</center>");
 		out.print("		<center>");
 		out.print(
 				"			<form class=\"ansForm\" action=\"datareader\" method =\"post\" onSubmit=\"doPost(request, response)\">");
 		out.print("				<table>");
 		out.print("					<tr>");
-		out.print("                 	<th align=\"left\"><font color=\"red\" size=5>Question</font></th>");
-		out.print("						<th align=\"left\"><font color=\"red\" size=5>Row</font></th>");
-		out.print("						<th align=\"left\"><font color=\"red\" size=5>Column</font></th>");
-		out.print("						<th align=\"left\"><font color=\"red\" size=5>Score</font></th>");
+		out.print(
+				"                 	<th align=\"left\"><font color=\"red\" size=5>&nbsp;Question & Answer(s)</font></th>");
+		out.print("						<th align=\"center\"><font color=\"red\" size=5>Row</font></th>");
+		out.print("						<th align=\"center\"><font color=\"red\" size=5>Column</font></th>");
+		out.print("						<th align=\"center\"><font color=\"red\" size=5>Score</font></th>");
 		out.print("					</tr>");
 
 		// Read the text file, scanning for questions.
@@ -182,9 +207,9 @@ public class datareader extends HttpServlet {
 		// out.print(" <br>");
 		out.print("				<input name=\"number\" value=" + qnum + " type='hidden'>");
 		out.print(
-				"				<input type=\"button\" class=\"back\" onclick=\"location.href=\'http://plato.cs.virginia.edu/~knt3tb/hw2/main.php\'\"value=\"Add more questions\">");
+				"				<input type=\"button\" class=\"back\" onclick=\"location.href=\'http://plato.cs.virginia.edu/~knt3tb/hw2/main.php\'\"value=\"Add More Questions\">");
 		out.print("				&nbsp;");
-		out.print("				<input type=\"submit\" class=\"submit\" value=\"Create the game!\">");
+		out.print("				<input type=\"submit\" class=\"submit\" value=\"Create the Game!\">");
 		out.print("			</form>");
 		out.print("		</center>");
 		out.print("	</body>");
@@ -247,7 +272,10 @@ public class datareader extends HttpServlet {
 		out.print("	<body>");
 		out.print("		<h1 align=\"center\">Jeopardy Game Creator</h1>");
 		out.print("     <h2 align=\"center\">By Khanh Tran (knt3tb) and Seven Starosta (sbs3bx)");
-		out.print("		<br><br>");
+		out.print("		<h2 align=\"center\"> Welcome to the Grid Screen! </h2>");
+		out.print(
+				"		<h3 align=\"center\"> <font color=\"red\"> If you would like to make changes, click Go Back and Edit to edit anything from the previous form. </font></h3>");
+		// out.print(" <br><br>");
 
 		// NEED TO WRITE TO A LOCAL FILE HERE
 		// include question on one line, row on next, col on next, score on
@@ -258,9 +286,11 @@ public class datareader extends HttpServlet {
 		// row values for questions passed in with ids as "row0", "row1" etc
 		// same for column and score values as "col0", "score0"
 
-		// System.getProperty("user.home");
-		String userHomeFolder = System.getProperty("user.home");
-		File f = new File(userHomeFolder + "\\Desktop\\data-file.txt");
+		// If you can't get the file to create in the tomcat folder, comment out line 293 and uncomment lines 290 and 291 for it to write to your desktop instead
+		// String userHomeFolder = System.getProperty("user.home");
+		// File f = new File(userHomeFolder + "\\Desktop\\data-file.txt");
+
+		File f = new File("D:\\eclipse\\tomcat9\\webapps\\projectdata\\WEB-INF\\data\\data-file.txt");
 
 		// File f = new File("D:\\data-file.txt");
 		// f.mkdirs();
@@ -348,7 +378,8 @@ public class datareader extends HttpServlet {
 			out.print("					</tr>");
 		}
 		out.print("			</table>");
-		out.print("			<input type=\"button\" class=\"back\" value=\"Go Back and Edit\" onClick=history.back()-1>");
+		out.print(
+				"			<input type=\"button\" class=\"back\" value=\"Go Back and Edit\" onClick=history.back()-1>");
 		out.print("		</center>");
 		out.print("	</body>");
 		out.print("</html>");

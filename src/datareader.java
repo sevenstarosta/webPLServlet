@@ -96,7 +96,7 @@ public class datareader extends HttpServlet {
 		out.print("	<body>");
 		out.print("		<center>");
 		out.print("		<h1 align=\"center\">Jeopardy Game Creator</h1>");
-		out.print("     <h2 align=\"center\">By Khanh Tran (knt3tb) and Seven Starosta (sbs3bx)");
+		out.print("     <h2 align=\"center\">By Khanh Tran (knt3tb) and Seven Starosta (sbs3bx)</h2>");
 		out.print(
 				"		<h3> Use this form to assign a row position, column position, and score to your questions <br>and proceed to creating a jeopardy grid for your game! </h3>");
 		out.print("		<h3> <font color=\"red\"> Instuctions: </font></h3>");
@@ -106,8 +106,8 @@ public class datareader extends HttpServlet {
 		out.print("			<li> Enter <b>numerical</b> values into the form under row, column, and score. </li>");
 		out.print(
 				"			<li> Click on Add More Questions to create additional questions for your game <br>or Create the Game! to see your grid. </li>");
-		out.print("</ol>");
-		out.print("</center>");
+		out.print("		</ol>");
+		out.print("		</center>");
 		out.print("		<center>");
 		out.print(
 				"			<form class=\"ansForm\" action=\"datareader\" method =\"post\" onSubmit=\"doPost(request, response)\">");

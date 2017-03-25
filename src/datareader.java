@@ -150,7 +150,7 @@ public class datareader extends HttpServlet {
 						// out.print(line);
 						while (line.length() > 0) {
 							// out.print("current line value: " + line);
-							if (line.substring(0, 3).equals("ans")) {
+							if (line.length()>3 && line.substring(0, 3).equals("ans")) {
 								line = data.readLine();
 								answers += line + ",";
 								out.print("<b>" + line + " </b>");
@@ -275,22 +275,12 @@ public class datareader extends HttpServlet {
 		out.print("		<h2 align=\"center\"> Welcome to the Grid Screen! </h2>");
 		out.print(
 				"		<h3 align=\"center\"> <font color=\"red\"> If you would like to make changes, click Go Back and Edit to edit anything from the previous form. </font></h3>");
-		// out.print(" <br><br>");
+		
+		// If you can't get the file to create in the tomcat folder, comment out line 283 and uncomment lines 280 and 211 for it to write to your desktop instead
+		 String userHomeFolder = System.getProperty("user.home");
+		 File f = new File(userHomeFolder + "\\Desktop\\data-file.txt");
 
-		// NEED TO WRITE TO A LOCAL FILE HERE
-		// include question on one line, row on next, col on next, score on
-		// last, then blank line
-		// Code below may display questions without having to read file, reading
-		// file will be for later HW assignments
-		// questions passed in as "q0", "q1", etc
-		// row values for questions passed in with ids as "row0", "row1" etc
-		// same for column and score values as "col0", "score0"
-
-		// If you can't get the file to create in the tomcat folder, comment out line 293 and uncomment lines 290 and 291 for it to write to your desktop instead
-		// String userHomeFolder = System.getProperty("user.home");
-		// File f = new File(userHomeFolder + "\\Desktop\\data-file.txt");
-
-		File f = new File("D:\\eclipse\\tomcat9\\webapps\\projectdata\\WEB-INF\\data\\data-file.txt");
+		//File f = new File("D:\\eclipse\\tomcat9\\webapps\\projectdata\\WEB-INF\\data\\data-file.txt");
 
 		// File f = new File("D:\\data-file.txt");
 		// f.mkdirs();
@@ -299,12 +289,8 @@ public class datareader extends HttpServlet {
 		// PrintWriter writer = new PrintWriter("data-file.txt", "UTF-8");
 
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(f))) {
-			// String contents = "pls file";
-			// writer.write(contents);
-
 			for (int i = 0; i < num; i++) {
 				try {
-					// out.print("hello loop");
 					int currentrow = Integer.parseInt(request.getParameter("row" + i));
 					int currentcol = Integer.parseInt(request.getParameter("col" + i));
 
@@ -321,16 +307,6 @@ public class datareader extends HttpServlet {
 					if (currentcol > numcols) {
 						numcols = currentcol - 1;
 					}
-					// write to some file here... here is my pseudocode. You
-					// should
-					// overwrite the file each time you submit so that there is
-					// only
-					// one game at a time.
-					// file.append(getParameter(q+i))
-					// file.append(getParameter(row+i))
-					// file.append(getParameter(col+i))
-					// file.append(getParameter(score+i))
-					// file.append(\n)
 				} catch (Exception e) {
 
 				}
@@ -338,41 +314,34 @@ public class datareader extends HttpServlet {
 			writer.close();
 		}
 
-		// writer.close();
-
 		/*
 		 * Checking that arguments read properly
 		 * out.print(" 	<p>"+num+"</p>"); out.print(" 	<p>"+numcols+"</p>");
 		 * out.print(" 	<p>"+numrows+"</p>");
 		 */
 		out.print("		<center>");
-
 		out.print("			<table class=\"grid\">");
-		// create nested for loops, with try catch to prevent errors if no
-		// question at r, c
-		// int r = 1;
-		// int c = 1;
-		// out.print("numrows = " + numrows + " ");
-		// out.print("numcols = " + numcols + "<br>");
-
-		// ERROR PROPBABLY IN THESE LOOPS. also, format the table so it has a
-		// border
-		for (int r = 0; r <= numrows + 1; r++) {
+		for (int r = 1; r <= numrows + 1; r++) {
 			out.print("					<tr>");
-			for (int c = 0; c <= numcols + 1; c++) {
+			for (int c = 1; c <= numcols + 1; c++) {
+				boolean madecell = false;
 				for (int i = 0; i < num; i++) {
 					try {
 						int currentrow = Integer.parseInt(request.getParameter("row" + i));
 						int currentcol = Integer.parseInt(request.getParameter("col" + i));
-						// out.print(currentrow + " " + r + "<br>");
 						if (currentrow == r && currentcol == c) {
-							out.print("					<td><font color=\"white\">" + request.getParameter("score" + i)
+							out.print("					<td width=50px height=30px><font color=\"white\">" + request.getParameter("score" + i)
 									+ "</font></td>");
+							madecell=true;
 						}
 					} catch (Exception e) {
 						out.print("<td>Error at printing stage at row " + (r + 1) + " and column" + (c + 1) + "</p>");
 						out.print("<p>" + e + "</p>");
 					}
+				}
+				if(!madecell)
+				{
+					out.print("					<td width=50px height=30px></td>");
 				}
 			}
 			out.print("					</tr>");
@@ -383,9 +352,6 @@ public class datareader extends HttpServlet {
 		out.print("		</center>");
 		out.print("	</body>");
 		out.print("</html>");
-
-		// need to write to file based on input data
-
 	}
 
 }

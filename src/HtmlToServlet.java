@@ -28,5 +28,6 @@ public class HtmlToServlet {
 				writer.newLine();
 			}
 		}
+		scanner.close();
 	}
 }

@@ -3,9 +3,9 @@ import java.io.*;
 import java.io.File;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.*;
 
 //import org.apache.tomcat.jni.File;
 
@@ -22,6 +22,7 @@ public class datareader extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		HttpSession session = request.getSession(true);
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		InputStream is = new URL("http://plato.cs.virginia.edu/~knt3tb/hw2/data/data.txt").openStream();
@@ -201,11 +202,14 @@ public class datareader extends HttpServlet {
 		// unique IDs for row, column, and score put into the form
 
 		out.print("				</table>");
+		out.print("				<input type=\"text\" id=\"gamename\" name=\"gamename\" value=\"\" placeholder=\"Enter a Game Name\" style=\"width: 180px\"/>");
 		// out.print(" <input type=\"submit\" class=\"submit\" value=\"Create
 		// the game!\">");
 		// back button to add more questions
 		// out.print(" <br>");
 		out.print("				<input name=\"number\" value=" + qnum + " type='hidden'>");
+		out.print("				<input name=\"userID\" value=" + (String) session.getAttribute("UserID") + " type='hidden'>");
+		out.print("<p>"+(String) session.getAttribute("UserID")+"</p>");
 		out.print(
 				"				<input type=\"button\" class=\"back\" onclick=\"location.href=\'http://plato.cs.virginia.edu/~knt3tb/hw2/main.php\'\"value=\"Add More Questions\">");
 		out.print("				&nbsp;");
@@ -289,18 +293,20 @@ public class datareader extends HttpServlet {
 		// PrintWriter writer = new PrintWriter("data-file.txt", "UTF-8");
 
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(f))) {
+			//now loop through writer, checking if userID matches this user ID, and if gamename matches to overwrite. If no matches,
+			writer.write(request.getParameter("userID")+";");
+			writer.write(request.getParameter("gamename")+";");
 			for (int i = 0; i < num; i++) {
 				try {
 					int currentrow = Integer.parseInt(request.getParameter("row" + i));
 					int currentcol = Integer.parseInt(request.getParameter("col" + i));
-
+					//want to write username, game name to file.
 					writer.write(request.getParameter("q" + i));
 					writer.write(request.getParameter("rightans" + i) + ";Answers: ");
 					writer.write(request.getParameter("ans" + i) + ";");
 					writer.write(request.getParameter("row" + i) + ";");
 					writer.write(request.getParameter("col" + i) + ";");
-					writer.write(request.getParameter("score" + i) + ";");
-					writer.write("\n");
+					writer.write(request.getParameter("score" + i) + "|");
 					if (currentrow > numrows) {
 						numrows = currentrow - 1;
 					}
@@ -311,6 +317,7 @@ public class datareader extends HttpServlet {
 
 				}
 			}
+			writer.write("\n");
 			writer.close();
 		}
 

@@ -16,7 +16,7 @@ public class browse extends HttpServlet {
 	private static String LoginServlet = "http://localhost:8080/webPLServlet/login";
 	private static String LogoutServlet = "http://localhost:8080/webPLServlet/logout";
 	private static String browseScreen = "http://localhost:8080/webPLServlet/browse";
-
+	private static String datareader = "http://localhost:8080/webPLServlet/datareader";
 	private static String q1_Servlet = "http://localhost:8080/CS4640/examples.question1";
 
 	private static String classWebsite = "http://www.cs.virginia.edu/upsorn/cs4640/";
@@ -51,9 +51,38 @@ public class browse extends HttpServlet {
 
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-
+		
 		PrintHead(out);
-		PrintBody(out);
+
+		out.println("<body >");
+
+		out.println(
+				"  <table width=\"20%\" align=\"right\" bgcolor=\"white\" border=\"0\" cellspacing=\"2\"");
+		out.println("    <tr>");
+		out.println("      <td align=\"right\"><font size=4><b>UserID:  " + user + "</b></font></td>");
+		out.println("      <td>");
+		out.println("        <form action=\"" + LogoutServlet + "\" method=\"post\">");
+		out.println("          <center><input type=\"submit\" class=\"logout\" value=\"Logout\"></input></center>");
+		out.println("        </form>");
+		out.println("      </td>");
+		out.println("    </tr>");
+		out.println("  </table>");
+
+		out.println("  <br /><br />");
+
+		out.print("		<center>");
+		out.print("		<h1 align=\"center\">Jeopardy Game Browse Screen</h1>");
+		out.print("     <h2 align=\"center\">By Khanh Tran (knt3tb) and Seven Starosta (sbs3bx)</h2>");
+		out.print("		</center>");
+
+		out.println("  <br /><h3>Greetings " + user + "</h3>");
+		out.println("        <form action=\"" + datareader + "\" method=\"get\">");
+		out.println("          <center><input type=\"submit\" class=\"button\" value=\"Create a new game, or overwrite an old one\"></input></center>");
+		out.println("        </form>");
+		out.println("  <p>");
+		//print out the games here by each file...
+		out.println("    Some information that we need to fill in later.");
+		out.println("  </p>");
 		//PrintBottom(out);
 
 		out.close();
@@ -67,8 +96,9 @@ public class browse extends HttpServlet {
 	 ********************************************************* 
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response); // if an HTTP POST request comes in, simple
-									// redraw the page by calling doGet()
+		doGet(request, response); 
+		// if an HTTP POST request comes in, simple
+		// redraw the page by calling doGet()
 	}
 
 	public void PrintHead(PrintWriter out) {
@@ -155,7 +185,11 @@ public class browse extends HttpServlet {
 		out.print("		</center>");
 
 		out.println("  <br /><h3>Greetings " + user + "</h3>");
+		//out.println("        <form action=\"" + response.sendRedirect(datareader); + "\" method=\"post\">");
+		out.println("          <center><input type=\"submit\" class=\"button\" value=\"Test datareader\"></input></center>");
+		out.println("        </form>");
 		out.println("  <p>");
+		//print out the games here by each file...
 		out.println("    Some information that we need to fill in later.");
 		out.println("  </p>");
 

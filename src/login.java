@@ -20,14 +20,14 @@ public class login extends HttpServlet {
 
 	private static String LoginServlet = "http://localhost:8080/webPLServlet/login";
 	private static String browseScreen = "http://localhost:8080/webPLServlet/browse";
-
+	private static String datareader = "http://localhost:8080/webPLServlet/datareader";
 	//private static String classWebsite = "http://www.cs.virginia.edu/upsorn/cs4640/";
 
 	// a data file containing username and password
 	// note: this is a simple login information without encryption.
 	// In reality, credential must be encrypted for security purpose
-	public static String user_info = "D:\\eclipse\\tomcat9\\webapps\\projectdata\\WEB-INF\\data\\user-info.txt";
-
+	//public static String user_info = "D:\\eclipse\\tomcat9\\webapps\\projectdata\\WEB-INF\\data\\user-info.txt";
+	public static String user_info = System.getProperty("user.home") + "\\Desktop\\user-info.txt";
 	// public static String survey_info =
 	// "D:\\eclipse\\tomcat9\\webapps\\cs4640\\WEB-INF\\data\\survey-info.txt";
 

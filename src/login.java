@@ -6,7 +6,6 @@ import javax.servlet.annotation.*;
 import java.io.*;
 import java.util.Scanner;
 
-
 //*********************************************************************
 
 @WebServlet("/login")
@@ -51,9 +50,8 @@ public class login extends HttpServlet {
 	private int number_attempts = 0;
 
 	private boolean lockedOut = false;
-	
-	//private Timer time = new Timer();
 
+	// private Timer time = new Timer();
 
 	/**
 	 * ***************************************************** Overrides
@@ -141,44 +139,43 @@ public class login extends HttpServlet {
 		// I can't figure out why the text doesn't appear until the end of the
 		// timer
 
-		int countdown = 30;
 
 		if (number_attempts >= 3 && invalidID && btn.equals("Log in")) {
+			
+			int countdown = 30;
+
 
 			out.println("<br><font color=\"red\"><center>Too many failed attempts. Please try again after " + countdown
 					+ " seconds</center></font><br><br>");
 
 			lockedOut = true;
 			
-			
-			
-			
-			//runTime(lockedOut);
+			if (lockedOut == true) {
+
+//				while (countdown > 0) {
+//
+//					System.out.println(countdown);
+//					countdown--;
+//					try {
+//
+//						Thread.sleep(1000);
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
+//				System.out.println("done!");
+//				number_attempts--;
+//				System.out.println(number_attempts);
+//				lockedOut = false;
+//				System.out.println(lockedOut);
+//
+//			}
+
+			// runTime(lockedOut);
 
 		}
 
-		// if (lockedOut==true) {
-		//
-		// while (countdown > 0) {
-		//
-		//
-		// System.out.println(countdown);
-		// countdown--;
-		// try {
-		//
-		// Thread.sleep(30000);
-		// } catch (InterruptedException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// }
-		// System.out.println("done!");
-		// number_attempts--;
-		// System.out.println(number_attempts);
-		// lockedOut = false;
-		// System.out.println(lockedOut);
-		//
-		// }
 
 		// while (lockedOut) {
 		// timer.schedule(new TimerTask() {
@@ -280,41 +277,42 @@ public class login extends HttpServlet {
 		out.close();
 	}
 
-//	private void runTime(boolean lockedOut2) {
-//		
-//		if (lockedOut2 == true) {
-//			int countdown = 30;
-//			while (countdown > 0) {
-//
-//				System.out.println(countdown);
-//				countdown--;
-//				try {
-//
-//					Thread.sleep(1000);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			System.out.println("done!");
-//			number_attempts--;
-//			System.out.println(number_attempts);
-//			lockedOut = false;
-//			System.out.println(lockedOut);
-//
-//		}
-//
-//	}
+	// private void runTime(boolean lockedOut2) {
+	//
+	// if (lockedOut2 == true) {
+	// int countdown = 30;
+	// while (countdown > 0) {
+	//
+	// System.out.println(countdown);
+	// countdown--;
+	// try {
+	//
+	// Thread.sleep(1000);
+	// } catch (InterruptedException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// }
+	// System.out.println("done!");
+	// number_attempts--;
+	// System.out.println(number_attempts);
+	// lockedOut = false;
+	// System.out.println(lockedOut);
+	//
+	// }
+	//
+	// }
 
 	/*******************************************************
 	 * Overrides HttpServlet's doPost().
 	 * 
 	 * // assume an account will locked after 3 failed attempts // write code to
 	 * check and handle this business logic // (optional)
-	 * @return 
+	 * 
+	 * @return
 	 ********************************************************* 
 	 */
-		  
+
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(true);
 
@@ -451,4 +449,3 @@ public class login extends HttpServlet {
 	}
 
 }
-

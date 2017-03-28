@@ -158,14 +158,15 @@ public class datareader extends HttpServlet {
 							if (line.length()>3 && line.substring(0, 3).equals("ans")) {
 								line = data.readLine();
 								answers += line + ",";
-								out.print("<b>" + line + " </b>");
+								out.print(line + " &nbsp;");
 								savedanswer = line;
 							} else {
 								answers += line + ",";
-								out.print(line + " ");
+								out.print(line + " &nbsp;");
 							}
 							line = data.readLine();
 						}
+						out.print("<br> Right answer: " + savedanswer);
 						if (answers.charAt(answers.length() - 1) == ',') {
 							answers = answers.substring(0, answers.length() - 1);
 						}

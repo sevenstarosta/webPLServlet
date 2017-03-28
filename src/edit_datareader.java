@@ -213,7 +213,7 @@ public class edit_datareader extends HttpServlet {
 						String scoreid = "score" + qnum;
 						String rightansid = "rightans" + qnum;
 						String ansid = "ans" + qnum;
-						String savedquestion = remainder.substring(0, remainder.indexOf(';')) + ";";
+						String savedquestion = remainder.substring(0, remainder.indexOf(';'));
 						out.print("					<tr>");
 						out.print("						<td style=\"padding: 10px; max-width: 500px;\"> Question: "
 								+ savedquestion + "<br>");
@@ -221,13 +221,13 @@ public class edit_datareader extends HttpServlet {
 						// ORDER OF WRITING TO FILE?
 						remainder = remainder.substring(remainder.indexOf(';') + 1, remainder.length());
 						String savedanswer = remainder.substring(0, remainder.indexOf(';'));
-						out.print("Right answer: " + savedanswer);
 						remainder = remainder.substring(remainder.indexOf(';') + 1, remainder.length());
 						String answers = remainder.substring(9, remainder.indexOf(';', 9));
 						if (answers.charAt(answers.length() - 1) == ',') {
 							answers = answers.substring(0, answers.length() - 1);
 						}
-						out.print(answers);
+						out.print(answers.replace(",", " &nbsp;"));
+						out.print("<br>Right answer: " + savedanswer);
 						remainder = remainder.substring(remainder.indexOf(';') + 1, remainder.length());
 						int row = Integer.parseInt(remainder.substring(0, remainder.indexOf(';')));
 						remainder = remainder.substring(remainder.indexOf(';') + 1, remainder.length());
@@ -242,6 +242,7 @@ public class edit_datareader extends HttpServlet {
 						out.print("						<td><input type=\"text\" id=" + scoreid + " name=" + scoreid
 								+ " value=\'" + score + "\' style=\"width: 90px\"/></td>");
 						out.print("					</tr>");
+						savedquestion += ";";
 						out.print("					<input name=" + qid + " value=\'" + savedquestion
 								+ "\' type='hidden'>");
 						out.print("					<input name=" + ansid + " value=\'" + answers

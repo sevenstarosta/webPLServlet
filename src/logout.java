@@ -17,6 +17,7 @@ public class logout extends HttpServlet
    private static final long serialVersionUID = 1L;
    
    //**** setting for local  ****/    
+   private static String LoginServlet = "http://localhost:8080/webPLServlet/login";
    private static String browseScreen = "http://localhost:8080/webPLServlet/browse";
    
 
@@ -46,7 +47,7 @@ public class logout extends HttpServlet
       {
          session.invalidate();
       }
-      //response.sendRedirect(SurveyServlet);   
+      response.sendRedirect(LoginServlet);   
    }
  
 }

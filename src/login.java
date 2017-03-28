@@ -6,6 +6,7 @@ import javax.servlet.annotation.*;
 import java.io.*;
 import java.util.Scanner;
 
+
 //*********************************************************************
 
 @WebServlet("/login")
@@ -21,13 +22,15 @@ public class login extends HttpServlet {
 	private static String LoginServlet = "http://localhost:8080/webPLServlet/login";
 	private static String browseScreen = "http://localhost:8080/webPLServlet/browse";
 	private static String datareader = "http://localhost:8080/webPLServlet/datareader";
-	//private static String classWebsite = "http://www.cs.virginia.edu/upsorn/cs4640/";
+	// private static String classWebsite =
+	// "http://www.cs.virginia.edu/upsorn/cs4640/";
 
 	// a data file containing username and password
 	// note: this is a simple login information without encryption.
 	// In reality, credential must be encrypted for security purpose
-	//public static String user_info = "D:\\eclipse\\tomcat9\\webapps\\projectdata\\WEB-INF\\data\\user-info.txt";
-	public static String user_info = System.getProperty("user.home") + "\\Desktop\\user-info.txt";
+	public static String user_info = "D:\\eclipse\\tomcat9\\webapps\\projectdata\\WEB-INF\\data\\user-info.txt";
+	// public static String user_info = System.getProperty("user.home") +
+	// "\\Desktop\\user-info.txt";
 	// public static String survey_info =
 	// "D:\\eclipse\\tomcat9\\webapps\\cs4640\\WEB-INF\\data\\survey-info.txt";
 
@@ -40,12 +43,17 @@ public class login extends HttpServlet {
 	private static String newUserID;
 	private static String newPwd;
 	private static String confirmPwd;
-	//private static String email;
+	// private static String email;
 
 	// doPost() tells doGet() when the login is invalid.
 	private static boolean invalidID = false;
 
 	private int number_attempts = 0;
+
+	private boolean lockedOut = false;
+	
+	//private Timer time = new Timer();
+
 
 	/**
 	 * ***************************************************** Overrides
@@ -130,9 +138,77 @@ public class login extends HttpServlet {
 
 		out.println("<br /><br />");
 
-		if (invalidID && btn.equals("Log in")) { // called from doPost(), invalid ID entered.
+		// I can't figure out why the text doesn't appear until the end of the
+		// timer
+
+		int countdown = 30;
+
+		if (number_attempts >= 3 && invalidID && btn.equals("Log in")) {
+
+			out.println("<br><font color=\"red\"><center>Too many failed attempts. Please try again after " + countdown
+					+ " seconds</center></font><br><br>");
+
+			lockedOut = true;
+			
+			
+			
+			
+			//runTime(lockedOut);
+
+		}
+
+		// if (lockedOut==true) {
+		//
+		// while (countdown > 0) {
+		//
+		//
+		// System.out.println(countdown);
+		// countdown--;
+		// try {
+		//
+		// Thread.sleep(30000);
+		// } catch (InterruptedException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		// System.out.println("done!");
+		// number_attempts--;
+		// System.out.println(number_attempts);
+		// lockedOut = false;
+		// System.out.println(lockedOut);
+		//
+		// }
+
+		// while (lockedOut) {
+		// timer.schedule(new TimerTask() {
+		// int countdown = 30;
+		//
+		// public void run() {
+		// while (countdown > 0) {
+		// countdown = countdown -1;
+		// System.out.println(countdown);
+		// }
+		// System.out.println("done!");
+		// number_attempts = 0;
+		// System.out.println(number_attempts);
+		// lockedOut = false;
+		// System.out.println(lockedOut);
+		// //label.setText(countdown + "seconds left");
+		// }
+		// }, 1000, 10000);
+		// }
+
+		if (invalidID && btn.equals("Log in") && number_attempts < 3 && !lockedOut) { // called
+																						// from
+																						// doPost(),
+																						// invalid
+																						// ID
+																						// entered.
 			invalidID = false;
-			out.println("<br><font color=\"red\"><center>Invalid user ID or password. Please try again.</center></font><br><br>");
+			out.println(
+					"<br><font color=\"red\"><center>Invalid user ID or password. Please try again.</center></font><br><br>");
+			number_attempts++;
 		}
 
 		out.println("<center>");
@@ -160,10 +236,12 @@ public class login extends HttpServlet {
 		out.println("<br />");
 		out.println("<hr />");
 		out.println("<br />");
-		
-		if (invalidID && btn.equals("Register")) { // called from doPost(), invalid ID entered.
+
+		if (invalidID && btn.equals("Register")) { // called from doPost(),
+													// invalid ID entered.
 			invalidID = false;
-			out.println("<br><font color=\"red\"><center>Invalid input. Please make sure passwords match and that no fields are left blank and try again.</center></font><br><br>");
+			out.println(
+					"<br><font color=\"red\"><center>Invalid input. Please make sure passwords match and that no fields are left blank and try again.</center></font><br><br>");
 		}
 
 		out.print("<center>");
@@ -202,20 +280,48 @@ public class login extends HttpServlet {
 		out.close();
 	}
 
+//	private void runTime(boolean lockedOut2) {
+//		
+//		if (lockedOut2 == true) {
+//			int countdown = 30;
+//			while (countdown > 0) {
+//
+//				System.out.println(countdown);
+//				countdown--;
+//				try {
+//
+//					Thread.sleep(1000);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//			System.out.println("done!");
+//			number_attempts--;
+//			System.out.println(number_attempts);
+//			lockedOut = false;
+//			System.out.println(lockedOut);
+//
+//		}
+//
+//	}
+
 	/*******************************************************
 	 * Overrides HttpServlet's doPost().
 	 * 
 	 * // assume an account will locked after 3 failed attempts // write code to
 	 * check and handle this business logic // (optional)
+	 * @return 
 	 ********************************************************* 
 	 */
+		  
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(true);
 
 		btn = request.getParameter("btn");
-		
-//		userID = "";
-//		pwd = "";
+
+		// userID = "";
+		// pwd = "";
 
 		userID = request.getParameter("UserID");
 		pwd = request.getParameter("pwd");
@@ -264,12 +370,14 @@ public class login extends HttpServlet {
 	 *         userid/password does not match
 	 */
 	private boolean isValid(String userid, String password) {
-//		System.out.println(userid);
-//		System.out.println(password);
-		if (userid == null) userid = "";
-		if (password == null) password = "";
-//		System.out.println(userid);
-//		System.out.println(password);
+		// System.out.println(userid);
+		// System.out.println(password);
+		if (userid == null)
+			userid = "";
+		if (password == null)
+			password = "";
+		// System.out.println(userid);
+		// System.out.println(password);
 		boolean is_valid = false;
 		if (userid.length() == 0 || password.length() == 0)
 			return false;
@@ -281,11 +389,12 @@ public class login extends HttpServlet {
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
 				String existing_user = line.substring(0, line.indexOf(","));
-				//System.out.println("existing_user = " + existing_user);
+				// System.out.println("existing_user = " + existing_user);
 				String existing_pwd = line.substring(line.indexOf(",") + 1, line.length());
-				//System.out.println("existing_pwd = " + existing_pwd);
+				// System.out.println("existing_pwd = " + existing_pwd);
 				if (userid.equals(existing_user) && password.equals(existing_pwd)) {
 					is_valid = true;
+					number_attempts = 0;
 					break;
 				}
 			}
@@ -342,3 +451,4 @@ public class login extends HttpServlet {
 	}
 
 }
+

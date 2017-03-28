@@ -15,18 +15,28 @@ import javax.servlet.annotation.*;
 import java.net.URL;
 import java.nio.channels.FileChannel;
 
-@WebServlet("/datareader")
-public class datareader extends HttpServlet {
+@WebServlet("/delete_datareader")
+public class delete_datareader extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public datareader() {
+	private static String LoginServlet = "http://localhost:8080/webPLServlet/login";
+	private static String LogoutServlet = "http://localhost:8080/webPLServlet/logout";
+
+	public delete_datareader() {
 		super();
 
 	}
 
+	private String user;
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(true);
+		user = (String) session.getAttribute("UserID");
+
+		if (user == null || user.length() == 0)
+			response.sendRedirect(LoginServlet);
+
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		InputStream is = new URL("http://plato.cs.virginia.edu/~knt3tb/hw2/data/data.txt").openStream();
@@ -155,7 +165,7 @@ public class datareader extends HttpServlet {
 						// out.print(line);
 						while (line.length() > 0) {
 							// out.print("current line value: " + line);
-							if (line.length()>3 && line.substring(0, 3).equals("ans")) {
+							if (line.length() > 3 && line.substring(0, 3).equals("ans")) {
 								line = data.readLine();
 								answers += line + ",";
 								out.print("<b>" + line + " </b>");
@@ -206,14 +216,16 @@ public class datareader extends HttpServlet {
 		// unique IDs for row, column, and score put into the form
 
 		out.print("				</table>");
-		out.print("				<input type=\"text\" id=\"gamename\" name=\"gamename\" value=\"\" placeholder=\"Enter a Game Name\" style=\"width: 180px\"/>");
+		out.print(
+				"				<input type=\"text\" id=\"gamename\" name=\"gamename\" value=\"\" placeholder=\"Enter a Game Name\" style=\"width: 180px\"/>");
 		// out.print(" <input type=\"submit\" class=\"submit\" value=\"Create
 		// the game!\">");
 		// back button to add more questions
 		// out.print(" <br>");
 		out.print("				<input name=\"number\" value=" + qnum + " type='hidden'>");
-		out.print("				<input name=\"userID\" value=" + (String) session.getAttribute("UserID") + " type='hidden'>");
-		out.print("<p>"+(String) session.getAttribute("UserID")+"</p>");
+		out.print("				<input name=\"userID\" value=" + (String) session.getAttribute("UserID")
+				+ " type='hidden'>");
+		out.print("<p>" + (String) session.getAttribute("UserID") + "</p>");
 		out.print(
 				"				<input type=\"button\" class=\"back\" onclick=\"location.href=\'http://plato.cs.virginia.edu/~knt3tb/hw2/main.php\'\"value=\"Add More Questions\">");
 		out.print("				&nbsp;");
@@ -283,10 +295,12 @@ public class datareader extends HttpServlet {
 		out.print("		<h2 align=\"center\"> Welcome to the Grid Screen! </h2>");
 		out.print(
 				"		<h3 align=\"center\"> <font color=\"red\"> If you would like to make changes, click Go Back and Edit to edit anything from the previous form. </font></h3>");
-		
-		// If you can't get the file to create in the tomcat folder, comment out line 283 and uncomment lines 280 and 211 for it to write to your desktop instead
-		//String userHomeFolder = System.getProperty("user.home");
-		//File f = new File(userHomeFolder + "\\Desktop\\data-file.txt");
+
+		// If you can't get the file to create in the tomcat folder, comment out
+		// line 283 and uncomment lines 280 and 211 for it to write to your
+		// desktop instead
+		// String userHomeFolder = System.getProperty("user.home");
+		// File f = new File(userHomeFolder + "\\Desktop\\data-file.txt");
 
 		File f = new File("D:\\eclipse\\tomcat9\\webapps\\projectdata\\WEB-INF\\data\\data-file.txt");
 		File temp = new File("D:\\eclipse\\tomcat9\\webapps\\projectdata\\WEB-INF\\data\\temp-data-file.txt");
@@ -299,28 +313,28 @@ public class datareader extends HttpServlet {
 		// PrintWriter writer = new PrintWriter("data-file.txt", "UTF-8");
 
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(temp))) {
-			//now loop through writer, checking if userID matches this user ID, and if gamename matches to overwrite. If no matches,
+			// now loop through writer, checking if userID matches this user ID,
+			// and if gamename matches to overwrite. If no matches,
 			BufferedReader data = new BufferedReader(new FileReader(f));
 			boolean haswritten = false;
 			String line = data.readLine();
-			while (line != null && line.length() > 0)
-			{
-				if(line.indexOf(';')>=1 && line.indexOf(';',line.indexOf(';')+1) >=2) {
-					
-					//out.println("another hello?");
-					String username=line.substring(0, line.indexOf(';'));
-					//out.println("username = " + username);
-					String gameid=line.substring(line.indexOf(';')+1, line.indexOf(';',line.indexOf(';')+1));
-					if(username.equals((String)request.getParameter("userID")) && ((String)request.getParameter("gamename")).equals(gameid))
-					{
-						haswritten=true;
-						writer.write(request.getParameter("userID")+";");
-						writer.write(request.getParameter("gamename")+";");
+			while (line != null && line.length() > 0) {
+				if (line.indexOf(';') >= 1 && line.indexOf(';', line.indexOf(';') + 1) >= 2) {
+
+					// out.println("another hello?");
+					String username = line.substring(0, line.indexOf(';'));
+					// out.println("username = " + username);
+					String gameid = line.substring(line.indexOf(';') + 1, line.indexOf(';', line.indexOf(';') + 1));
+					if (username.equals((String) request.getParameter("userID"))
+							&& ((String) request.getParameter("gamename")).equals(gameid)) {
+						haswritten = true;
+						writer.write(request.getParameter("userID") + ";");
+						writer.write(request.getParameter("gamename") + ";");
 						for (int i = 0; i < num; i++) {
 							try {
 								int currentrow = Integer.parseInt(request.getParameter("row" + i));
 								int currentcol = Integer.parseInt(request.getParameter("col" + i));
-								//want to write username, game name to file.
+								// want to write username, game name to file.
 								writer.write(request.getParameter("q" + i));
 								writer.write(request.getParameter("rightans" + i) + ";Answers: ");
 								writer.write(request.getParameter("ans" + i) + ";");
@@ -338,25 +352,22 @@ public class datareader extends HttpServlet {
 							}
 						}
 						writer.write("\n");
-					}
-					else
-					{
+					} else {
 						writer.write(line);
 						writer.write("\n");
 					}
-				
+
 				}
-				line=data.readLine();
+				line = data.readLine();
 			}
-			if (!haswritten)
-			{
-				writer.write(request.getParameter("userID")+";");
-				writer.write(request.getParameter("gamename")+";");
+			if (!haswritten) {
+				writer.write(request.getParameter("userID") + ";");
+				writer.write(request.getParameter("gamename") + ";");
 				for (int i = 0; i < num; i++) {
 					try {
 						int currentrow = Integer.parseInt(request.getParameter("row" + i));
 						int currentcol = Integer.parseInt(request.getParameter("col" + i));
-						//want to write username, game name to file.
+						// want to write username, game name to file.
 						writer.write(request.getParameter("q" + i));
 						writer.write(request.getParameter("rightans" + i) + ";Answers: ");
 						writer.write(request.getParameter("ans" + i) + ";");
@@ -376,7 +387,7 @@ public class datareader extends HttpServlet {
 				writer.write("\n");
 			}
 			writer.close();
-			copyFile(temp,f);
+			copyFile(temp, f);
 		}
 
 		/*
@@ -395,17 +406,16 @@ public class datareader extends HttpServlet {
 						int currentrow = Integer.parseInt(request.getParameter("row" + i));
 						int currentcol = Integer.parseInt(request.getParameter("col" + i));
 						if (currentrow == r && currentcol == c) {
-							out.print("					<td align=\"center\"><font color=\"white\">" + request.getParameter("score" + i)
-									+ "</font></td>");
-							madecell=true;
+							out.print("					<td align=\"center\"><font color=\"white\">"
+									+ request.getParameter("score" + i) + "</font></td>");
+							madecell = true;
 						}
 					} catch (Exception e) {
 						out.print("<td>Error at printing stage at row " + (r + 1) + " and column" + (c + 1) + "</p>");
 						out.print("<p>" + e + "</p>");
 					}
 				}
-				if(!madecell)
-				{
+				if (!madecell) {
 					out.print("					<td align=\"center\"></td>");
 				}
 			}
@@ -418,28 +428,27 @@ public class datareader extends HttpServlet {
 		out.print("	</body>");
 		out.print("</html>");
 	}
-	
+
 	public static void copyFile(File sourceFile, File destFile) throws IOException {
-	    if(!destFile.exists()) {
-	        destFile.createNewFile();
-	    }
+		if (!destFile.exists()) {
+			destFile.createNewFile();
+		}
 
-	    FileChannel source = null;
-	    FileChannel destination = null;
+		FileChannel source = null;
+		FileChannel destination = null;
 
-	    try {
-	        source = new FileInputStream(sourceFile).getChannel();
-	        destination = new FileOutputStream(destFile).getChannel();
-	        destination.transferFrom(source, 0, source.size());
-	    }
-	    finally {
-	        if(source != null) {
-	            source.close();
-	        }
-	        if(destination != null) {
-	            destination.close();
-	        }
-	    }
+		try {
+			source = new FileInputStream(sourceFile).getChannel();
+			destination = new FileOutputStream(destFile).getChannel();
+			destination.transferFrom(source, 0, source.size());
+		} finally {
+			if (source != null) {
+				source.close();
+			}
+			if (destination != null) {
+				destination.close();
+			}
+		}
 	}
 
 }

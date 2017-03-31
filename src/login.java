@@ -139,43 +139,49 @@ public class login extends HttpServlet {
 		// I can't figure out why the text doesn't appear until the end of the
 		// timer
 
+		if (number_attempts == 3 && invalidID && btn.equals("Log in")) {
+			number_attempts++;
+			//System.out.println(number_attempts);
 
-		if (number_attempts >= 3 && invalidID && btn.equals("Log in")) {
-			
-			int countdown = 30;
-
-
-			out.println("<br><font color=\"red\"><center>Too many failed attempts. Please try again after " + countdown
-					+ " seconds</center></font><br><br>");
+			out.println(
+					"<br><font color=\"red\"><center>Too many failed attempts. Please try again after 30 seconds</center></font><br><br>");
 
 			lockedOut = true;
-			
+
+		} else if (number_attempts == 4 && invalidID && btn.equals("Log in")) {
+			number_attempts++;
+			//System.out.println(number_attempts);
+			out.println(
+					"<br><font color=\"red\"><center>Too many failed attempts. Please try again after 30 seconds</center></font><br><br>");
+			int countdown = 30;
 			if (lockedOut == true) {
 
-//				while (countdown > 0) {
-//
-//					System.out.println(countdown);
-//					countdown--;
-//					try {
-//
-//						Thread.sleep(1000);
-//					} catch (InterruptedException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//				}
-//				System.out.println("done!");
-//				number_attempts--;
-//				System.out.println(number_attempts);
-//				lockedOut = false;
-//				System.out.println(lockedOut);
-//
-//			}
+				while (countdown > 0) {
 
-			// runTime(lockedOut);
+					System.out.println(countdown);
+					countdown--;
+					try {
+
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				System.out.println("done!");
+				number_attempts -= 2;
+				System.out.println(number_attempts);
+				lockedOut = false;
+				System.out.println(lockedOut);
+
+			}
+		} else if (number_attempts > 4 && btn.equals("Log in")) {
+			//System.out.println("Goes into this loop");
+			//System.out.println(number_attempts);
+			out.println(
+					"<br><font color=\"red\"><center>Too many failed attempts. Please try again after 30 seconds</center></font><br><br>");
 
 		}
-
 
 		// while (lockedOut) {
 		// timer.schedule(new TimerTask() {
@@ -390,11 +396,12 @@ public class login extends HttpServlet {
 				// System.out.println("existing_user = " + existing_user);
 				String existing_pwd = line.substring(line.indexOf(",") + 1, line.length());
 				// System.out.println("existing_pwd = " + existing_pwd);
-				if (userid.equals(existing_user) && password.equals(existing_pwd)) {
+				if (userid.equals(existing_user) && password.equals(existing_pwd) && !lockedOut) {
 					is_valid = true;
 					number_attempts = 0;
 					break;
 				}
+
 			}
 
 			scanner.close();

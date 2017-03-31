@@ -21,6 +21,7 @@ public class edit_datareader extends HttpServlet {
 
 	private static String LoginServlet = "http://localhost:8080/webPLServlet/login";
 	private static String LogoutServlet = "http://localhost:8080/webPLServlet/logout";
+	private static String browseScreen = "http://localhost:8080/webPLServlet/browse";
 
 	public edit_datareader() {
 		super();
@@ -140,6 +141,27 @@ public class edit_datareader extends HttpServlet {
 		out.print("				color: white;");
 		out.print("			}");
 		
+		out.print(" 		.browse {");
+		out.print("				background-color: white;");
+		out.print("				border: 2px solid blue;");
+		out.print("				color: black;");
+		out.print("				padding: 16px 32px;");
+		out.print("				text-align: center;");
+		out.print("				text-decoration: none;");
+		out.print("				display: inline-block;");
+		out.print("				font-size: 16px;");
+		// out.print(" margin: 4px 2px;");
+		out.println("			margin-top: 5px;");
+		out.println("			margin-bottom: 15px;");
+		out.print("				transition-duration: 0.4s;");
+		out.print("				cursor: pointer;");
+		out.print("			}");
+
+		out.print("			.browse:hover {");
+		out.print("				background-color: blue;");
+		out.print("				color: white;");
+		out.print("			}");
+		
 		out.print("		</style>");
 		out.print("	</head>");
 		
@@ -189,9 +211,11 @@ public class edit_datareader extends HttpServlet {
 		File f = new File("D:\\eclipse\\tomcat9\\webapps\\projectdata\\WEB-INF\\data\\data-file.txt");
 		BufferedReader data = new BufferedReader(new FileReader(f));
 		String line = data.readLine();
+//		File temp = new File("D:\\eclipse\\tomcat9\\webapps\\projectdata\\WEB-INF\\data\\temp-data-file.txt");
+//		temp.delete();
+//		temp = new File("D:\\eclipse\\tomcat9\\webapps\\projectdata\\WEB-INF\\data\\temp-data-file.txt");
+//		BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
 		int qnum = 0;
-		// NEED TO ALSO WRITE LINES TO FILE, EXCEPT FOR FOUND LINE, THIS WAY
-		// DELETED.
 		while (line != null && line.length() > 0) {
 			if (line.indexOf(';') >= 1 && line.indexOf(';', line.indexOf(';') + 1) >= 2) {
 
@@ -253,10 +277,15 @@ public class edit_datareader extends HttpServlet {
 						qnum++;
 					}
 				}
+//				else
+//				{
+//					writer.write(line);
+//				}
 			}
 			line = data.readLine();
 		}
-
+//		writer.close();
+		data.close();
 		///////////////////////////////////////////////////////////
 
 		/**********************************************************
@@ -331,6 +360,9 @@ public class edit_datareader extends HttpServlet {
 				"				<input type=\"button\" class=\"back\" onclick=\"location.href=\'http://plato.cs.virginia.edu/~knt3tb/hw2/main.php\'\"value=\"Add More Questions\">");
 		out.print("				&nbsp;");
 		out.print("				<input type=\"submit\" class=\"submit\" value=\"Create the Game!\">");
+		out.print("				<br>");
+		out.print("				<input type=\"button\" class=\"browse\" onclick=\"location.href=\'" + browseScreen
+				+ "\'\"value=\"Return to Browse Screen\">");
 		out.print("			</form>");
 		out.print("		</center>");
 		out.print("	</body>");
@@ -344,6 +376,11 @@ public class edit_datareader extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		HttpSession session = request.getSession(true);
+		user = (String) session.getAttribute("UserID");
+		if (user == null || user.length() == 0)
+			response.sendRedirect(LoginServlet);
+		
 		int num = Integer.parseInt(request.getParameter("number"));
 		int numrows = 0;
 		int numcols = 0;
@@ -387,6 +424,42 @@ public class edit_datareader extends HttpServlet {
 		out.print("			.back:hover {");
 		out.print("				background-color: red;");
 		out.print("				color: white;");
+		out.print("			}");
+		
+		out.print(" 		.logout {");
+		out.print("				background-color: white;");
+		out.print("				border: 2px solid red;");
+		out.print("				color: black;");
+		out.print("				padding: 8px 16px;");
+		out.print("				text-align: center;");
+		out.print("				text-decoration: none;");
+		out.print("				display: inline-block;");
+		out.print("				font-size: 16px;");
+		out.print(" 			margin-bottom: 5px;");
+		out.print("				margin-top: 5px;");
+		out.print("				transition-duration: 0.4s;");
+		out.print("				cursor: pointer;");
+		out.print("			}");
+
+		out.print("			.logout:hover {");
+		out.print("				background-color: red;");
+		out.print("				color: white;");
+		out.print("			}");
+
+		out.print(" 		.browse {");
+		out.print("				background-color: white;");
+		out.print("				border: 2px solid blue;");
+		out.print("				color: black;");
+		out.print("				padding: 16px 32px;");
+		out.print("				text-align: center;");
+		out.print("				text-decoration: none;");
+		out.print("				display: inline-block;");
+		out.print("				font-size: 16px;");
+		// out.print(" margin: 4px 2px;");
+		out.println("			margin-top: 5px;");
+		out.println("			margin-bottom: 15px;");
+		out.print("				transition-duration: 0.4s;");
+		out.print("				cursor: pointer;");
 		out.print("			}");
 		out.print("		</style>");
 		out.print("	</head>");

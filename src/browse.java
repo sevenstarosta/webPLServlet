@@ -20,6 +20,7 @@ public class browse extends HttpServlet {
 	private static String browseScreen = "http://localhost:8080/webPLServlet/browse";
 	private static String datareader = "http://localhost:8080/webPLServlet/datareader";
 	private static String EditServlet = "http://localhost:8080/webPLServlet/edit_datareader";
+	private static String startGame = "http://localhost:8080/webPLServlet/projectjsp/startGame.jsp";
 	// private static String q1_Servlet =
 	// "http://localhost:8080/CS4640/examples.question1";
 
@@ -122,8 +123,10 @@ public class browse extends HttpServlet {
 				// fix this later
 				// out.println(" <td width=\"350\">&nbsp;</td>");
 				out.println(
-						"			 <td><input type=\"submit\" class=\"play\" value=\"Play Game\" name=\"btn\"></td>");
-				if (user.equals(username)) {
+						"			 <td><form action=\"" + startGame
+							+ "\" method=\"get\" id=\"startgame\" name=\"form\"><input type=\"submit\" class=\"play\" value=\"Play Game\" name=\"btn\">"
+							+ "<input type = \"hidden\" name=\"gameid\" value = " + gameid + "> </form></td>");
+				if (user != null && user.equals(username)) {
 					out.println("			 <td><form action=\"" + EditServlet
 							+ "\" method=\"get\" id=\"editform\" name=\"form\"><input type=\"submit\" class=\"edit\" value=\"Edit Game\" name=\"btn\">"
 							+ "<input type = \"hidden\" name=\"gameid\" value = " + gameid + "> </form></td>");

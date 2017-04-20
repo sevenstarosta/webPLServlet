@@ -29,6 +29,7 @@ public class datareader extends HttpServlet {
 	private static String browseScreen = "http://localhost:8080/webPLServlet/browse";
 
 	private String user;
+	private static boolean invalidGame;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -163,6 +164,8 @@ public class datareader extends HttpServlet {
 		out.print("			}");
 		out.print("		</style>");
 		out.print("	</head>");
+
+		
 		out.print("	<body>");
 
 		out.println("  <table width=\"20%\" align=\"right\" bgcolor=\"white\" border=\"0\" cellspacing=\"2\">");
@@ -285,10 +288,19 @@ public class datareader extends HttpServlet {
 
 		// now qnum will have number of questions, which also is number of
 		// unique IDs for row, column, and score put into the form
+		
+		
 
 		out.print("				</table>");
 		out.print(
 				"				<input type=\"text\" id=\"gamename\" name=\"gamename\" value=\"\" placeholder=\"Enter a Game Name\" style=\"width: 180px\"/>");
+		
+		if (invalidGame) {
+			out.println(
+					"<br><font color=\"red\"><center>Don't leave game name blank</center></font>");
+
+		}
+		
 		// out.print(" <input type=\"submit\" class=\"submit\" value=\"Create
 		// the game!\">");
 		// back button to add more questions
@@ -322,6 +334,14 @@ public class datareader extends HttpServlet {
 		user = (String) session.getAttribute("UserID");
 		if (user == null || user.length() == 0)
 			response.sendRedirect(LoginServlet);
+		
+		String gamename = (String) request.getParameter("gamename");
+		if (gamename == null || gamename.length() == 0)
+		{
+			invalidGame = true;
+			doGet(request, response);
+		}else {
+			invalidGame = false;
 		
 		int num = Integer.parseInt(request.getParameter("number"));
 		int numrows = 0;
@@ -582,7 +602,7 @@ public class datareader extends HttpServlet {
 		out.print("	</body>");
 		out.print("</html>");
 	}
-
+	}
 	public static void copyFile(File sourceFile, File destFile) throws IOException {
 		if (!destFile.exists()) {
 			destFile.createNewFile();
@@ -604,5 +624,5 @@ public class datareader extends HttpServlet {
 			}
 		}
 	}
-
+	
 }

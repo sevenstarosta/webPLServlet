@@ -6,7 +6,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import javafx.scene.shape.Line;
+//import javafx.scene.shape.Line;
 
 import javax.servlet.annotation.*;
 
@@ -254,12 +254,12 @@ public class datareader extends HttpServlet {
 							answers = answers.substring(0, answers.length() - 1);
 						}
 						out.print("						</td>");
-						out.print("						<td><input type=\"text\" id=" + rowid + " name=" + rowid
-								+ " value=\"\" placeholder=\"1\" style=\"width: 90px\"/></td>");
-						out.print("						<td><input type=\"text\" id=" + colid + " name=" + colid
-								+ " value=\"\" placeholder=\"1\" style=\"width: 90px\"/></td>");
-						out.print("						<td><input type=\"text\" id=" + scoreid + " name=" + scoreid
-								+ " value=\"\" placeholder=\"100\" style=\"width: 90px\"/></td>");
+						out.print("						<td><input type=\"number\" id=" + rowid + " name=" + rowid
+								+ " value=\"\" required placeholder=\"1\" style=\"width: 90px\"/></td>");
+						out.print("						<td><input type=\"number\" id=" + colid + " name=" + colid
+								+ " value=\"\" required placeholder=\"1\" style=\"width: 90px\"/></td>");
+						out.print("						<td><input type=\"number\" id=" + scoreid + " name=" + scoreid
+								+ " value=\"\" required placeholder=\"100\" style=\"width: 90px\"/></td>");
 						out.print("					</tr>");
 						// passing the question itself as a separate value in
 						// the form

@@ -13,18 +13,66 @@ body, html {
 	padding-right: 100px;
 }
 
-table.grid td {
+table.grid .cellbutt {
+	width: 100%;
 	border: 2px solid black;
-	padding: 20px;
+	padding: 25px;
 	font-size: 150%;
 	background-color: #005ce6;
+	color: white;
+	border: 2px solid black;
 }
 
-table.grid td:hover {
-	border: 2px solid black;
-	padding: 20px;
-	font-size: 150%;
+table.grid .cellbutt:hover {
 	background-color: #66a3ff;
+}
+
+.empty {
+	width: 100%;
+	border: 2px solid black;
+	padding: 25px;
+	font-size: 150%;
+	background-color: #005ce6;
+	color: #005ce6;
+	cursor: not-allowed;
+	border: 2px solid black;
+}
+
+table.grid .dead {
+	width: 100%;
+	position: relative;
+	display: inline-block;
+	border: 2px solid black;
+	padding: 25px;
+	color: white;
+	font-size: 150%;
+	background-color: #005ce6;
+	cursor: not-allowed;
+}
+
+table.grid .dead:hover {
+	background-color: #005ce6;
+	cursor: not-allowed;
+}
+
+.dead::before, .dead::after {
+	content: '';
+	width: 100%;
+	position: absolute;
+	right: 0;
+	top: 50%;
+}
+
+.dead::before {
+	border-bottom: 3px solid red;
+	-webkit-transform: skewY(-40deg);
+	transform: skewY(-40deg);
+}
+
+.dead::after {
+	border-bottom: 3px solid red;
+	-webkit-transform: skewY(40deg);
+	transform: skewY(40deg);
 }
 
 table.teamgrid td {
@@ -130,8 +178,27 @@ table.teamgrid td {
 	color: white;
 }
 </style>
+
+<script type=text/javascript
+	src=http://localhost:8080/webPLServlet/projectjsp/ajax.js>
+	
+	
+
+</script>
+
 </head>
+
 <body>
+
+	<%
+		String LoginServlet = "http://localhost:8080/webPLServlet/login";
+		String LogoutServlet = "http://localhost:8080/webPLServlet/logout";
+		String user = (String) session.getAttribute("UserID");
+
+		//System.out.println(user);
+		if (user == null || user.length() == 0)
+			response.sendRedirect(LoginServlet);
+	%>
 
 	<table width="20%" align="right" bgcolor="white" border="0"
 		cellspacing="2">
@@ -156,9 +223,17 @@ table.teamgrid td {
 
 		<br> <br>
 		<%
-			int numrows = Integer.parseInt((String) request.getParameter("numrows"));
-			int numcols = Integer.parseInt((String) request.getParameter("numcols"));
-			int num = Integer.parseInt((String) request.getParameter("qnum"));
+			int numrows = Integer.parseInt(session.getAttribute("numrows").toString());
+			int numcols = Integer.parseInt(session.getAttribute("numcols").toString());
+			int num = Integer.parseInt(session.getAttribute("qnum").toString());
+
+			int score = 0;
+			if (request.getParameter("qnumber") != null) {
+				int qnumber = Integer.parseInt((String) request.getParameter("qnumber"));
+				score = Integer.parseInt(session.getAttribute("score" + qnumber).toString());
+				session.setAttribute("valid" + qnumber, "false");
+				//out.println(score);
+			}
 
 			//if (numrows == 0 || numcols == 0 || num == 0) {
 			//	response.sendRedirect("http://localhost:8080/webPLServlet/browse");
@@ -172,11 +247,28 @@ table.teamgrid td {
 					boolean madecell = false;
 					for (int i = 0; i < num; i++) {
 						try {
-							int currentrow = Integer.parseInt(request.getParameter("row" + i));
-							int currentcol = Integer.parseInt(request.getParameter("col" + i));
+							int currentrow = Integer.parseInt(session.getAttribute("row" + i).toString());
+							int currentcol = Integer.parseInt(session.getAttribute("col" + i).toString());
 							if (currentrow == r && currentcol == c) {
-								out.print("					<td align=\"center\"><font color=\"white\">"
-										+ request.getParameter("score" + i) + "</font></td>");
+								if (Boolean.parseBoolean(session.getAttribute("valid" + i).toString())) {
+		%>
+		<td>
+			<form action="questionInfo.jsp" method="post">
+				<input type="submit" class="cellbutt" id="btn" name="button"
+					value="<%=session.getAttribute("score" + i)%>" />
+					<input type="hidden" id="qnumber" name="qnumber" value="<%=i%>" />
+					<input type="hidden" id="teamnum" name="teamnum" value="<%=request.getParameter("teamnum").toString()%>" />
+					<!-- <input type="hidden" id="storedscore" name="storedscore" value="0" />
+					<input type="hidden" id="refteam" name="refteam" value="0" /> -->
+			</form>
+		</td>
+		<%
+			} else {
+									//make invalid
+		%>
+		<td><button class="dead"><%=session.getAttribute("score" + i)%></button></td>
+		<%
+			}
 								madecell = true;
 							}
 						} catch (Exception e) {
@@ -186,8 +278,10 @@ table.teamgrid td {
 						}
 					}
 					if (!madecell) {
-						out.print("					<td align=\"center\"></td>");
-					}
+		%>
+		<td><button class="empty"><%=session.getAttribute("emptyscore")%></button></td>
+		<%
+			}
 				}
 				out.print("					</tr>");
 			}
@@ -199,45 +293,55 @@ table.teamgrid td {
 		</table>
 
 		<br>
-		<table class="teamgrid" border="1">
-			<tr>
-				<%
-					for (int i = 1; i <= Integer.parseInt(request.getParameter("teamnum")); i++) {
-				%>
-				<td><font color="black">Team <%=i%></font></td>
-				<%
-					if (session.getAttribute("score" + i) == null) {
-							session.setAttribute("score" + i, 0);
+		<form name=scoreform>
+			<table class="teamgrid" border="4">
+				<tr>
+					<%
+						for (int i = 1; i <= Integer.parseInt(request.getParameter("teamnum")); i++) {
+					%>
+					<td><font color="black">Team <%=i%></font></td>
+					<%
+						if (session.getAttribute("score" + i) == null) {
+								session.setAttribute("score" + i, 0);
+							}
 						}
-					}
-				%>
-			</tr>
+					%>
+				</tr>
 
-			<%!int scoreval = 100;
+				<tr>
+					<%
+						for (int i = 1; i <= Integer.parseInt(request.getParameter("teamnum")); i++) {
+							String temp = "txtHint" + i;
+							//parseInt(document.getElementById(temp).innerHTML)
+					%>
+					<td>
+						<!-- <center><%--session.getAttribute("score" + i)--%></center> <br> -->
+						<center>
+							<%
+								//int current = Integer.parseInt(session.getAttribute("hint"+i).toString());
+									//System.out.println("current " + current);
+								//String curhint = "hint"+i;
+							%>
+							<%--temp --%>
+							<%-- curhint --%>
+							<span id="<%=temp%>"><%=session.getAttribute(temp).toString()%></span>
+						</center> <br>
+						<center>
+							<input type="button" class="subtract" id="subtract" name="subtract" value="-" onclick=showHint(<%=score%>,"<%=temp%>",0) />
 
-			public void addScore(int value) {
-		
-			}
+							<input type="button" class="add" id="add" name="add" value="+" onclick=showHint(<%=score%>,"<%=temp%>",1) />
+							<%-- use hidden input and target with ajax --%>
 
-			public void subScore(int value) {
-
-			}%>
-			<tr>
-				<%
-					for (int i = 1; i <= Integer.parseInt(request.getParameter("teamnum")); i++) {
-				%>
-				<td>
-					<center><%=session.getAttribute("score" + i)%></center> <br>
-					<center>
-						<input type="button" class="subtract" id="subtract"	name="subtract" value="-" onClick=<% subScore(scoreval); %> /> 
-						<input type="button" class="add" id="add" name="add" value="+" onClick=<% addScore(scoreval); %>/>
-					</center>
-				</td>
-				<%
-					}
-				%>
-			</tr>
-		</table>
+						</center>
+					</td>
+					<%			
+					
+						}
+					
+					%>
+				</tr>
+			</table>
+		</form>
 
 		<br>
 		<form action="http://localhost:8080/webPLServlet/browse" method="post">
@@ -248,12 +352,3 @@ table.teamgrid td {
 </body>
 </html>
 
-<%
-	String LoginServlet = "http://localhost:8080/webPLServlet/login";
-	String LogoutServlet = "http://localhost:8080/webPLServlet/logout";
-
-	String user = (String) session.getAttribute("UserID");
-	//System.out.println(user);
-	if (user == null || user.length() == 0)
-		response.sendRedirect(LoginServlet);
-%>

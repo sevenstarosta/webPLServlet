@@ -259,12 +259,12 @@ public class edit_datareader extends HttpServlet {
 						remainder = remainder.substring(remainder.indexOf(';') + 1, remainder.length());
 						int score = Integer.parseInt(remainder.substring(0, remainder.indexOf('|')));
 						out.print("						</td>");
-						out.print("						<td><input type=\"text\" id=" + rowid + " name=" + rowid
-								+ " value=\'" + row + "\' style=\"width: 90px\"/></td>");
-						out.print("						<td><input type=\"text\" id=" + colid + " name=" + colid
-								+ " value=\'" + col + "\'  style=\"width: 90px\"/></td>");
-						out.print("						<td><input type=\"text\" id=" + scoreid + " name=" + scoreid
-								+ " value=\'" + score + "\' style=\"width: 90px\"/></td>");
+						out.print("						<td><input type=\"number\" id=" + rowid + " name=" + rowid
+								+ " value=\'" + row + "\' required style=\"width: 90px\"/></td>");
+						out.print("						<td><input type=\"number\" id=" + colid + " name=" + colid
+								+ " value=\'" + col + "\'  required style=\"width: 90px\"/></td>");
+						out.print("						<td><input type=\"number\" id=" + scoreid + " name=" + scoreid
+								+ " value=\'" + score + "\' required style=\"width: 90px\"/></td>");
 						out.print("					</tr>");
 						savedquestion += ";";
 						out.print("					<input name=" + qid + " value=\'" + savedquestion
